@@ -1,0 +1,51 @@
+* {
+	margin: 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+#ad {
+	font-family: sans-serif;
+}
+
+.ad-image {
+	display: block;
+	margin: 0 auto;
+	padding: 24px 0;
+	min-height: 100px;
+}
+
+.ad-download {
+	text-transform: uppercase;
+	font-weight: 500;
+	float: right;
+	display: inline-block;
+	line-height: 32px;
+	border-radius: 2px;
+	background: #FF5722;
+	height: 32px;
+	padding: 0 16px 0 16px;
+}
+
+.ad-title {
+	font-size: 24px;
+	clear: both;
+	text-align: center;
+	padding:  24px 0 32px 0;
+}
+
+.ad-description {
+	font-size: 16px;
+	text-align: justify;
+}
+
+footer {
+	border-top: 7px solid #1976D2;
+	padding: 24px;
+	background: #2196F3;
+	color: #fff;
+	overflow: hidden;
+}
