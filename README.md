@@ -16,3 +16,5 @@ createAd({
   description: 'Some Description'
 });
 ```
+
+Check responsiveness with built-in Chrome Device Toggler
