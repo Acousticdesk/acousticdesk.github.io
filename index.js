@@ -2,13 +2,14 @@
 (function () {
 	'use strict';
 
-	var placeholderImage = 'https://lh3.googleusercontent.com/Dl1P4zNfAfr4EsU-mLYhYGSmhYZIM190rccSnnUQr6m3tRqsDL1owHgLor30O3Mk4e0=w100-rw',
-		adContainer = document.getElementById('ad');
+	var adContainer = document.getElementById('ad-acceptic-postfix-9ghc1q'),
+		imageTimeoutMS = 1000;
 
 	function createAdImage(src) {
 		var image = new Image();
 		image.src = src;
 		image.className = 'ad-image';
+
 		return image;
 	}
 
@@ -55,27 +56,44 @@
 	function createAd(options) {
 		var image = createAdImage(options.src);
 		var styles = createStyles();
+		// we can't 
+		var imageTimeout;
 
-		adContainer.innerHTML = '';
+		options.image = image;
 
 		document.documentElement.firstElementChild.append(styles);
+		
+		image.onload = function (e) {
+			clearTimeout(imageTimeout);
+		};
+		
+		// We can't use this approach, as it implies huge timeout - ~30seconds, that
+		// is unaccaptable for banner ad case.
+
+		// image.onerror = function (e) {};
+
 		// If there is an issue with getting image - put placeholder
-		image.onerror = function(e) {
-			e.target.src = placeholderImage;
+		styles.onload = function () {
+			appendAd(options);
+			// If image would not load within 5 sec. - replace it with placeholder
+			imageTimeout = setTimeout(
+				replaceImageWithPlaceholder.bind(null, image, options.title), 
+				imageTimeoutMS
+			);
 		};
-		styles.onload = function() {
-			var o = {
-				downloadHref: options.downloadHref,
-				title: options.title,
-				description: options.description,
-				image: image
-			};
-			appendAd(o);
-		};
+	}
+
+	function replaceImageWithPlaceholder(image, placeholderText) {
+		var placeholder = document.createElement('div');
+		placeholder.className = 'ad-image';
+		placeholder.textContent = placeholderText + ' ' + '👍';
+		image.parentElement.prepend(placeholder);
+		image.remove();
 	}
 
 	function appendAd(options) {
 		var footer = createFooter(options);
+		adContainer.innerHTML = '';
 		adContainer.append(options.image);
 		adContainer.append(footer);
 	}
