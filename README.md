@@ -18,3 +18,7 @@ createAd({
 ```
 
 Check responsiveness with built-in Chrome Device Toggler
+
+### Additional features
+
+If broken link would be passed to src, image will be replaced with placeholder text, that will be equal to **options.title**
