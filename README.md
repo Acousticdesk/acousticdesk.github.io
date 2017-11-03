@@ -1,5 +1,5 @@
 # acousticdesk.github.io
-Animated fullscreen mobile ad, that contains logo, download btn, title and description.
+Animated fullscreen mobile ad, that contains logo, download btn, title and description - [Live demo](https://acousticdesk.github.io/)
 
 ## API
 **createAd** - global function
