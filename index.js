@@ -3,13 +3,14 @@
 	'use strict';
 
 	var adContainer = document.getElementById('ad-acceptic-postfix-9ghc1q'),
-		imageTimeoutMS = 1000;
+		resizeTimeout,
+		// Timeout for fetching image. Details below in the code.
+		imageTimeoutMS = 3000;
 
 	function createAdImage(src) {
 		var image = new Image();
 		image.src = src;
 		image.className = 'ad-image';
-
 		return image;
 	}
 
@@ -39,7 +40,6 @@
 		footer.append(downloadBtn);
 		footer.append(title);
 		footer.append(description);
-
 		return footer;
 	}
 
@@ -49,7 +49,6 @@
 		link.rel = 'stylesheet';
 		// could be CDN
 		link.href = './styles.css';
-
 		return link;
 	}
 
@@ -57,13 +56,16 @@
 		var image = createAdImage(options.src);
 		var styles = createStyles();
 		// we can't 
-		var imageTimeout;
+		var imageTimeout, imageLoaded;
 
 		options.image = image;
 
 		document.documentElement.firstElementChild.append(styles);
 		
 		image.onload = function (e) {
+			// image can be cached, so 
+			// this image.onload could be triggered before styles.onload runs
+			imageLoaded = true;
 			clearTimeout(imageTimeout);
 		};
 		
@@ -76,10 +78,12 @@
 		styles.onload = function () {
 			appendAd(options);
 			// If image would not load within 5 sec. - replace it with placeholder
-			imageTimeout = setTimeout(
-				replaceImageWithPlaceholder.bind(null, image, options.title), 
-				imageTimeoutMS
-			);
+			if (!imageLoaded) {
+				imageTimeout = setTimeout(
+					replaceImageWithPlaceholder.bind(null, image, options.title), 
+					imageTimeoutMS
+				);
+			}
 		};
 	}
 
@@ -96,6 +100,32 @@
 		adContainer.innerHTML = '';
 		adContainer.append(options.image);
 		adContainer.append(footer);
+		makeFullscreen(footer, options.image);
+
+		if (!window.onresize) {
+			window.onresize = function () {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(function () {
+					makeFullscreen(footer, options.image);
+				}, 350);
+			};
+		}
+	}
+
+	function makeFullscreen(footer, image) {
+		var clientHeight = document.documentElement.clientHeight;
+		var adHeight = adContainer.offsetHeight;
+		var adjustedImagePadding = (clientHeight - footer.offsetHeight - 100) / 2;
+		var padding;
+
+		if (clientHeight > adHeight && adjustedImagePadding >= 0) {
+			padding = adjustedImagePadding + 'px' + ' 0 ' + adjustedImagePadding + 'px' + ' 0';
+			footer.classList.add('floating');
+			image.style.setProperty('padding', padding);
+		} else {
+			footer.classList.remove('floating');
+			image.style.removeProperty('padding', padding);
+		}
 	}
 
 	createAd({

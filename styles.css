@@ -72,6 +72,8 @@ a {
 }
 
 #ad-acceptic-postfix-9ghc1q .ad-description {
+	max-width: 600px;
+	margin: 0 auto;
 	font-size: 16px;
 	text-align: justify;
 	animation: 
@@ -86,3 +88,39 @@ a {
 	color: #fff;
 	overflow: hidden;
 }
+
+#ad-acceptic-postfix-9ghc1q footer.floating {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
