@@ -7,6 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
+        html, body {
+            height: 100%;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
         @keyframes sliding {
             0% {
                 left: 0;
@@ -27,11 +34,9 @@
             }
         }
         .screen {
-            border: 1px solid #333;
-            width: 375px;
-            height: 667px;
-            margin: 0 auto;
             position: relative;
+            width: 100%;
+            height: 100%;
         }
         .basket {
             width: 120px;
