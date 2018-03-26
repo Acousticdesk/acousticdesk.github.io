@@ -709,12 +709,13 @@
           },
           win: function () {
             var onTransitionend = function () {
-              this.winScreen.removeEventListener('transitionend', onTransitionend);
+              //this.winScreen.removeEventListener('transitionend', onTransitionend);
               window.Ad.create();
             }.bind(this);
             
             this.winScreen.classList.add('show');
-            this.winScreen.addEventListener('transitionend', onTransitionend)
+            onTransitionend();
+            // this.winScreen.addEventListener('transitionend', onTransitionend)
           },
           updateCardCoords: function (x1, y1, x2, y2) {
             var nextY = y2 + this.cardSpeed;
