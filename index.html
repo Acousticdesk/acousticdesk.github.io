@@ -710,12 +710,10 @@
           win: function () {
             var onTransitionend = function () {
               this.winScreen.removeEventListener('transitionend', onTransitionend);
-              alert('helloworld');
               window.Ad.create();
             }.bind(this);
             
             this.winScreen.classList.add('show');
-            onTransitionend();
             this.winScreen.addEventListener('transitionend', onTransitionend)
           },
           updateCardCoords: function (x1, y1, x2, y2) {
