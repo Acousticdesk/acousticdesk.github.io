@@ -8,7 +8,7 @@
     <title>Document</title>
     <style>
         /* Interactive Interstitial */
-        .ad {
+        .dio-intint {
             display: table-cell;
             vertical-align: middle;
             padding: 5px 10px;
@@ -16,11 +16,11 @@
             position: relative;
         }
 
-        .ad__banner {
+        .dio-intint-banner {
             max-width: 100%;
         }
 
-        .ad__slider {
+        .dio-intint-slider {
             overflow: hidden;
             user-select: none;
         }
@@ -61,17 +61,17 @@
             opacity: 1;
         }
 
-        .ad__container {
+        .dio-intint-container {
             opacity: 0;
             margin: 0 auto;
             transition: opacity .3s linear;
         }
 
-        .ad__info {
+        .dio-intint-info {
             display: table;
         }
 
-        .ad__info--offset {
+        .dio-intint-info--offset {
             margin-top: 30px;
         }
 
@@ -102,7 +102,7 @@
             vertical-align: middle;
         }
 
-        .ad__cta {
+        .dio-intint-cta {
             background: #eb5033;
             display: block;
             color: #fff;
@@ -114,11 +114,11 @@
             font-weight: 600;
         }
 
-        .ad__cta--offset {
+        .dio-intint-cta--offset {
             margin-top: 20px;
         }
 
-        .ad__cta--offset-small {
+        .dio-intint-cta--offset-small {
             margin-top: 12px;
         }
 
@@ -132,7 +132,7 @@
             .info__text {
                 font-size: 24px;
             }
-            .ad__cta {
+            .dio-intint-cta {
                 font-size: 24px;
             }
             .landscape__col:last-of-type {
@@ -148,7 +148,7 @@
             .info__text {
                 font-size: 16px;
             }
-            .ad__cta {
+            .dio-intint-cta {
                 font-size: 18px;
             }
             .landscape__col:last-of-type {
@@ -324,14 +324,14 @@
     <div class="screen">
         <div class="win-screen">
             <div class="ad">
-                <div class="ad__container">
-                    <div class="ad__slider">
+                <div class="dio-intint-container">
+                    <div class="dio-intint-slider">
                         <div class="slider__tape">
 
                         </div>
                     </div>
                     <div class="mode--portrait">
-                        <div class="ad__info ad__info--offset">
+                        <div class="dio-intint-info dio-intint-info--offset">
                             <div class="info__col">
                                 <img
                                         class="info__img"
@@ -348,11 +348,11 @@
                                 </div>
                             </div>
                         </div>
-                        <a class="ad__cta ad__cta--offset" href="javascript:void(0);">Download for free!</a>
+                        <a class="dio-intint-cta dio-intint-cta--offset" href="javascript:void(0);">Download for free!</a>
                     </div>
                     <div class="mode--landscape">
                         <div class="landscape__col">
-                            <div class="ad__info">
+                            <div class="dio-intint-info">
                                 <div class="info__col">
                                     <img
                                             class="info__img"
@@ -371,7 +371,7 @@
                             </div>
                         </div>
                         <div class="landscape__col">
-                            <a class="ad__cta ad__cta--offset-small" href="javascript:void(0);">Download for free!</a>
+                            <a class="dio-intint-cta dio-intint-cta--offset-small" href="javascript:void(0);">Download for free!</a>
                         </div>
                     </div>
                 </div>
@@ -462,7 +462,7 @@
             this.el.style.opacity = 1;
           },
           create: function () {
-            this.el = document.querySelector('.ad__container');
+            this.el = document.querySelector('.dio-intint-container');
             this.slider = slider;
             this.slider.ad = this;
             this.onWindowResize = this.onWindowResize.bind(this);
@@ -506,7 +506,7 @@
             var slideEl = document.createElement('div');
             var img = document.createElement('img');
             slideEl.classList.add('slider__slide');
-            img.classList.add('ad__banner');
+            img.classList.add('dio-intint-banner');
             img.src = src;
             slideEl.appendChild(img);
             return slideEl;
@@ -579,7 +579,7 @@
             this.onTouchend = this.onTouchend.bind(this);
           },
           create: function () {
-            this.el = document.querySelector('.ad__slider');
+            this.el = document.querySelector('.dio-intint-slider');
             this.bindContext();
             this.setTape();
             this.createSlides();
