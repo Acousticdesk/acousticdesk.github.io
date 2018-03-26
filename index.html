@@ -715,9 +715,9 @@
                 this.winScreen.removeEventListener('transitionend', onTransitionend);
               }
             }.bind(this);
-            
+
+            this.winScreen.addEventListener('transitionend', onTransitionend);
             this.winScreen.classList.add('show');
-            this.winScreen.addEventListener('transitionend', onTransitionend)
           },
           updateCardCoords: function (x1, y1, x2, y2) {
             var nextY = y2 + this.cardSpeed;
