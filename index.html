@@ -19,7 +19,7 @@
                 left: 0;
             }
             50% {
-                left: 255px;
+                left: calc(100% - 90px);
             }
             100% {
                 left: 0;
@@ -33,79 +33,247 @@
                 transform: rotate(360deg);
             }
         }
+        @keyframes waiting {
+            0% {
+                transform: rotate(-45deg);
+            }
+            95% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(-45deg);
+            }
+        }
+        @keyframes hit {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5) rotate(-45deg);
+            }
+            65% {
+                transform: scale(1.5) rotate(45deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        .hidden {
+            display: none;
+        }
+        .screen:before {
+            content: ' ';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom:0 ;
+            z-index: -1;
+            opacity: 0.05;
+            background: url('./back.jpg');
+        }
+        .hand {
+            position: absolute;
+            width: 200px;
+            height: 117px;
+            bottom: 50px;
+            left: 50%;
+            margin-left: -100px;
+            background: url('./hand.png');
+            background-size: contain;
+        }
+        .hand:after {
+            position: absolute;
+            content: ' ';
+            width: 40px;
+            height: 40px;
+            right: 30px;
+            top: 50%;
+            margin-top: -45px;
+            transform: rotate(-15deg);
+            background: url('./dealdash.jpg');
+            background-size: contain;
+        }
+        .hand.waiting {
+            animation: waiting 1.5s infinite;
+        }
         .screen {
-            position: relative;
-            width: 100%;
             height: 100%;
+            overflow: hidden;
         }
         .basket {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             background: url('./hat.png') no-repeat;
             background-size: 100% 100%;
             position: absolute;
-            top: 100px;
-            animation: sliding 5s ease-in-out forwards infinite; 
+            top: 50px;
+            animation: sliding 3s forwards infinite linear; 
+        }
+        .basket.hit {
+            animation: hit 1s, sliding 3s forwards infinite linear;
         }
         .card {
             width: 50px;
             height: 80px;
             position: absolute;
-            border: 1px solid #333;
+            border: 4px solid #333;
             animation: rotation 1s linear infinite forwards;
-            background: url('./dealdash.jpg') 50% 0 no-repeat;
+            background: url('./dealdash.jpg') 50% 0 no-repeat, #fff;
             background-size: contain;
+        }
+        .card.placeholder {
+            opacity: 0.3;
+        }
+        .score {
+            padding: 10px;
+            font-family: sans-serif;
+        }
+        .win-screen {
+            z-index: 10;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            visibility: hidden;
+            opacity: 0;
+            background: rgba(0, 0, 0, 0.9);
+        }
+        .win-screen.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1s linear;
+        }
+        .ad {
+            margin-top: 100px;
+            padding: 5px 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .ad__banner {
+            max-width: 100%;
+        }
+
+        .ad__container {
+            margin: 0 auto;
+        }
+
+        .ad__info {
+            display: table;
+        }
+
+        .ad__info--offset {
+            margin-top: 30px;
+        }
+
+        .info__text {
+            color: #ccc;
+            font-weight: 600;
+            font-family: sans-serif;
+        }
+
+        .info__col {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .info__col:last-of-type {
+            padding-left: 20px;
+        }
+
+        .info__star {
+            color: #f1e5df;
+        }
+
+        .info__star--checked {
+            color: #f19733;
+        }
+
+        .info__img {
+            vertical-align: middle;
+        }
+
+        .ad__cta {
+            background: #eb5033;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 15px 20px;
+            font-family: sans-serif;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-top: 100px;
+        }
+
+        .ad__cta--offset-small {
+            margin-top: 12px;
+        }
+
+        .landscape__col {
+            display: table-cell;
+            vertical-align: middle;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-<!--
-getCoords: function (even, firstIteration) {
-            var startX = this.startX || this.coords.x;
-            var startY = this.startY || this.screen.clientHeight - this.coords.y;
-            var borderX = this.screen.clientWidth;
-            var xVector = firstIteration ? borderX - startX : this.screen.clientWidth;
-            var angleRad = this.angleDeg * Math.PI / 180;
-            var endY = startY + xVector * Math.tan(angleRad);
-
-            this.startY = endY;
-
-            if (even) {
-              this.startX = borderX;
-            } else {
-              this.startX = 1;
-            }
-
-            this.el.style.left = (even ? borderX : 0) + 'px';
-            this.el.style.top = this.screen.clientHeight - endY + 'px';
-          },
-          isBasketCollision: function () {
-            var basketRect = this.basket.getBoundingClientRect();
-            var elRect = this.el.getBoundingClientRect();
-            
-            if (elRect.x < basketRect.x + basketRect.width &&
-              elRect.x + elRect.width > basketRect.x &&
-              elRect.y < basketRect.y + basketRect.height &&
-              elRect.height + elRect.y > basketRect.y) {
-              return true;
-            }
-          },
--->
     <div class="screen">
-        <h2 class="score">Attempts: <span class="score-result">0</span></h2>
+        <div class="win-screen">
+            <!-- TODO: Interactive Interstitial -->
+            <div class="ad">
+                <div class="ad__container">
+                    <div class="mode--portrait">
+                        <div class="ad__info ad__info--offset">
+                            <div class="info__col">
+                                <img
+                                        src="https://lh3.googleusercontent.com/i4k5nBnHP35uPXKIqGLu7Gv9F7X4_9kJByL-jKUzO8agGJ4QGa2AGpJYIWe07GE81Z4=w150-rw"
+                                        class="info__img"
+                                        alt="">
+                            </div>
+                            <div class="info__col">
+                                <p class="info__text">Lorem ipsum dolor sit amet.</p>
+                                <div>
+                                    <span class="info__star--checked">&#9733;</span>
+                                    <span class="info__star--checked">&#9733;</span>
+                                    <span class="info__star--checked">&#9733;</span>
+                                    <span class="info__star--checked">&#9733;</span>
+                                    <span class="info__star">&#9733;</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="ad__cta ad__cta--offset" href="javascript:void(0);">Download for free!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<h2 class="score">Hits: <span class="score-result">0</span>/5</h2>-->
         <div class="basket"></div>
+        <div class="hand waiting"></div>
     </div>
     <script>
         var game = {
+          cache: {},
+          isPreview: true,
           cardSpeed: 10,
           animationDuration: 500,
           cardWidth: 50,
           cardHeight: 80,
-          updateScore: function () {
-            var resEl = document.querySelector('.score-result');
-            var currentScore = window.parseInt(resEl.textContent);
-            
-            resEl.textContent = currentScore + 1;
+          hand: document.querySelector('.hand'),
+          basket: document.querySelector('.basket'),
+          winScreen: document.querySelector('.win-screen'),
+          scoreVal: 0,
+          
+          score: function () {
+            // var resEl = document.querySelector('.score-result');
+            // var currentScore = window.parseInt(resEl.textContent);
+
+            if (!this.isPreview) {
+              this.scoreVal += 1;
+              // resEl.textContent = currentScore + 1;
+            }
           },
           setScreen: function (screen) {
             if (!this.screen) {
@@ -119,7 +287,7 @@ getCoords: function (even, firstIteration) {
             };
           },
           isBasketCollision: function () {
-            var basketRect = document.querySelector('.basket').getBoundingClientRect();
+            var basketRect = this.basket.getBoundingClientRect();
             var elRect = this.card.getBoundingClientRect();
 
             if (elRect.x < basketRect.x + basketRect.width &&
@@ -129,33 +297,40 @@ getCoords: function (even, firstIteration) {
               return true;
             }
           },
-          createCard: function (releasedX, releasedY) {
+          createCard: function (isPlaceholder) {
             this.card = document.createElement('div');
             this.card.style.width = this.cardWidth + 'px';
             this.card.style.height = this.cardHeight + 'px';
-            this.card.style.top = releasedY + 'px';
-            this.card.style.left = releasedX + 'px';
+            this.card.style.top = this.cache.y + 'px';
+            this.card.style.left = this.cache.x + 'px';
             this.card.classList.add('card');
+            this.card.classList.toggle('placeholder', !!isPlaceholder);
           },
           // Map coordinates from browser's ones to Math ones
           getCorrectCoordinates: function (value) {
             return this.screen.clientHeight - value;
           },
           removeCard: function () {
-            // TODO: Use browser compatible option
             this.card.remove();
             this.card = null;
+            this.cache.x = null;
+            this.cache.y = null;
+            window.setTimeout(function () {
+              this.basket.classList.remove('hit');
+              // TODO: Use browser compatible option
+              this.hand.classList.remove('hidden');
+              this.hand.classList.add('waiting');
+            }.bind(this), 1000);
+          },
+          win: function () {
+            this.winScreen.classList.add('show');
           },
           updateCardCoords: function (x1, y1, x2, y2) {
-            var nextY = y2 + 10;
+            var nextY = y2 + this.cardSpeed;
             var nextX = x1 + (nextY - y1) * ((x2 - x1) / (y2 - y1));
             var cardLeft = window.parseInt(nextX);
             var cardTop = this.screen.clientHeight - window.parseInt(nextY);
-            var card;
             
-            console.log(cardTop);
-            
-            // TODO: The problem is here!
             if (
               cardLeft > this.screen.clientWidth || cardTop > this.screen.clientHeight ||
               cardLeft < 0 || cardTop < 0
@@ -164,14 +339,19 @@ getCoords: function (even, firstIteration) {
               return;
             }
             
+            // TODO: find better place for this condition
             if (this.isBasketCollision()) {
               this.removeCard();
+              this.score();
+              this.basket.classList.add('hit');
+              if (this.scoreVal === 1) {
+                this.win();
+              }
               return;
             }
-
-            card = document.querySelector('.card');
-            card.style.left = cardLeft + 'px';
-            card.style.top = cardTop + 'px';
+            
+            this.card.style.left = cardLeft + 'px';
+            this.card.style.top = cardTop + 'px';
             
             window.requestAnimationFrame(this.updateCardCoords.bind(this,
               x2,
@@ -191,32 +371,96 @@ getCoords: function (even, firstIteration) {
               this.getCorrectCoordinates(releasedY)
             ));
           },
+          calculateAngle: function (releasedX, releasedY) {
+            this.hand.classList.remove('waiting');
+            var tg = this.getCorrectCoordinates(releasedY) / releasedX;
+            var angleRad = Math.atan(tg);
+            var angleDeg = angleRad * 180 / Math.PI;
+            angleDeg -= 30;
+            this.hand.style.transform = 'rotate(' + -angleDeg + 'deg)';
+          },
+          isSwiped: function (releasedX, releasedY) {
+            return this.cache.x !== releasedX || this.cache.y !== releasedY;
+          },
+          canThrow: function () {
+            return this.cache.x && this.cache.y;
+          },
+          getRandomArbitrary: function (min, max) {
+            return Math.random() * (max - min) + min;
+          },
+          stopPreview: function () {
+            window.clearInterval(this.previewInterval);
+            this.isPreview = false;
+          },
           throwCard: function (releasedX, releasedY) {
-            if (!this.card) {
-              this.createCard(releasedX, releasedY);
+            if (!this.card && this.isSwiped(releasedX, releasedY) && this.canThrow()) {
+              this.createCard();
               this.addCardUI();
               this.throwCardUI(releasedX, releasedY);
-              this.updateScore();
+              this.hand.classList.add('hidden');
             }
+          },
+          preview: function () {
+            if (!this.card) {
+              var handBox = this.hand.getBoundingClientRect();
+              this.cache.x = handBox.left + handBox.width / 2;
+              this.cache.y = handBox.top;
+              this.createCard('placeholder');
+              this.addCardUI();
+              this.throwCardUI(
+                this.cache.x,
+                this.cache.y + 20
+              );
+            }
+          },
+          startPreview: function () {
+            this.previewInterval = window.setInterval(function () {
+              if (document.hasFocus()) {
+                this.preview();
+              } else {
+                if (this.card) {
+                  this.card.remove();
+                  this.card = null;
+                }
+              }
+            }.bind(this), 3000);
           }
         };
         
         var screen = document.querySelector('.screen');
-        
+        var hand = document.querySelector('.hand');
         game.setScreen(screen);
         
-        screen.addEventListener('touchstart', function (e) {
+        var onTouchstart = function (e) {
           game.cacheCoords(
             e.changedTouches && e.changedTouches[0].clientX,
             e.changedTouches && e.changedTouches[0].clientY
           );
-        });
-        screen.addEventListener('touchend', function (e) {
+        };
+        
+        var onTouchend = function (e) {
           game.throwCard(
             e.changedTouches && e.changedTouches[0].clientX,
             e.changedTouches && e.changedTouches[0].clientY
           );
+        };
+        
+        var onTouchmove = function (e) {
+          game.calculateAngle(
+            e.changedTouches && e.changedTouches[0].clientX,
+            e.changedTouches && e.changedTouches[0].clientY
+          );
+        };
+        
+        game.startPreview();
+        
+        // TODO: Release throw when cursor is out of hand preset
+        screen.addEventListener('touchstart', function () {
+          game.stopPreview();
         });
+        hand.addEventListener('touchstart', onTouchstart);
+        screen.addEventListener('touchend', onTouchend);
+        hand.addEventListener('touchmove', onTouchmove);
     </script>
 </body>
 </html>
