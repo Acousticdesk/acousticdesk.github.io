@@ -705,7 +705,6 @@
           },
           win: function () {
             var onTransitionend = function (e) {
-              alert(e.target.className, e.propertyName);
               if (e.target === this.winScreen) {
                 window.Ad.create();
                 this.winScreen.removeEventListener('transitionend', onTransitionend);
