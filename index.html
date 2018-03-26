@@ -64,6 +64,7 @@
         .ad__container {
             opacity: 0;
             margin: 0 auto;
+            transition: opacity .3s linear;
         }
 
         .ad__info {
@@ -298,7 +299,9 @@
             right: 0;
             bottom: 0;
             left: 0;
-            display: none;
+            height: 0;
+            width: 0;
+            overflow: hidden;
             visibility: hidden;
             opacity: 0;
             background: rgba(0, 0, 0, 0.9);
@@ -307,10 +310,13 @@
         }
         /* TODO: Make a transition */
         .win-screen.show {
+            overflow: auto;
+            height: auto;
+            width: auto;
             display: flex;
             visibility: visible;
             opacity: 1;
-            transition: opacity 1s linear;
+            transition: opacity .3s linear;
         }
     </style>
 </head>
@@ -412,7 +418,8 @@
           }
         };
 
-        var Ad = {
+        // TODO: Remove global variable
+        window.Ad = {
           enums: {
             STAR_CHECKED_CLASS: 'info__star--checked'
           },
@@ -618,8 +625,6 @@
         };
 
         UI.killDefaultDragDrop();
-
-        Ad.create();
       })();
     </script>
     <script>
@@ -692,7 +697,13 @@
             }.bind(this), 1000);
           },
           win: function () {
+            var onTransitionend = function () {
+              this.winScreen.removeEventListener('transitionend', onTransitionend);
+              window.Ad.create();
+            }.bind(this);
+            
             this.winScreen.classList.add('show');
+            this.winScreen.addEventListener('transitionend', onTransitionend)
           },
           updateCardCoords: function (x1, y1, x2, y2) {
             var nextY = y2 + this.cardSpeed;
