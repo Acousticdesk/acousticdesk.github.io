@@ -286,24 +286,24 @@
         }
         .hand.original {
             transform-origin: 0 70%;
-            background: url('./hand.png');
+            background: url('src/assets/hand.png');
             background-size: 100%;
         }
         .hand.inverted {
             transform-origin: 100% 70%;
-            background: url('./hand_inverted.png');
+            background: url('src/assets/hand_inverted.png');
             background-size: contain;
         }
         .hand.original-empty {
             height: 68px;
             transform-origin: 0 70%;
-            background: url('./hand_empty.png');
+            background: url('src/assets/hand_empty.png');
             background-size: 100%;
         }
         .hand.inverted-empty {
             height: 68px;
             transform-origin: 0 70%;
-            background: url('./hand_empty_inverted.png');
+            background: url('src/assets/hand_empty_inverted.png');
             background-size: 100%;
         }
         /*.hand:after {*/
@@ -331,13 +331,13 @@
             position: relative;
             height: 100%;
             overflow: hidden;
-            background: url('./back.jpg') no-repeat;
+            background: url('src/assets/back.jpg') no-repeat;
             background-size: cover;
         }
         .basket {
             width: 90px;
             height: 117px;
-            background: url('./hat.png') no-repeat;
+            background: url('src/assets/hat.png') no-repeat;
             background-size: 100% 100%;
             position: absolute;
             top: 50px;
@@ -351,7 +351,7 @@
             height: 62.5px;
             position: absolute;
             animation: rotation 1s linear infinite forwards;
-            background: url('./card.png') no-repeat;
+            background: url('src/assets/card.png') no-repeat;
             background-size: contain;
         }
         .card.placeholder {
@@ -712,354 +712,6 @@
         UI.killDefaultDragDrop();
       })();
     </script>
-    <script>
-        var game = {
-          cache: {},
-          isPreview: true,
-          cardSpeed: 10,
-          animationDuration: 500,
-          cardWidth: 50,
-          cardHeight: 80,
-          hand: document.querySelector('.hand'),
-          basket: document.querySelector('.basket'),
-          winScreen: document.querySelector('.win-screen'),
-          cta: document.querySelector('.cta'),
-          closeBtn: document.querySelector('.close-btn'),
-          scoreVal: 0,
-          
-          score: function () {
-            // var resEl = document.querySelector('.score-result');
-            // var currentScore = window.parseInt(resEl.textContent);
-
-            if (!this.isPreview) {
-              this.scoreVal += 1;
-              // resEl.textContent = currentScore + 1;
-            }
-          },
-          setScreen: function (screen) {
-            if (!this.screen) {
-              this.screen = screen;
-            }
-          },
-          cacheCoords: function (x, y) {
-            this.cache = {
-              x: x,
-              y: y
-            };
-          },
-          isBasketCollision: function () {
-            var basketRect = this.basket.getBoundingClientRect();
-            var elRect = this.card.getBoundingClientRect();
-            var basketHoleOnPictureDiff = 20;
-            var basketHoleDiffBottom = basketRect.height - basketHoleOnPictureDiff;
-            var basketHoleDiffTop = basketRect.height / 4;
-            var sideDiff = basketRect.width / 2;
-            
-            if (elRect.left < basketRect.left + basketRect.width - sideDiff &&
-              elRect.left + elRect.width > basketRect.left + sideDiff &&
-              elRect.top < basketRect.top + basketHoleOnPictureDiff &&
-              elRect.height + elRect.top > basketRect.top + basketHoleOnPictureDiff) {
-              return true;
-            }
-          },
-          createCard: function (isPlaceholder) {
-            this.card = document.createElement('div');
-            this.card.style.width = this.cardWidth + 'px';
-            this.card.style.height = this.cardHeight + 'px';
-            this.card.style.top = this.cache.y + 'px';
-            this.card.style.left = this.cache.x - this.hand.clientWidth / 2 + 'px';
-            this.card.classList.add('card');
-            this.card.classList.toggle('placeholder', !!isPlaceholder);
-          },
-          // Map coordinates from browser's ones to Math ones
-          getCorrectCoordinates: function (value) {
-            return this.screen.clientHeight - value;
-          },
-          removeCard: function () {
-            this.card.remove();
-            this.card = null;
-            this.cache.x = null;
-            this.cache.y = null;
-            window.setTimeout(function () {
-              this.basket.classList.remove('hit');
-              // TODO: Use browser compatible option
-              // this.hand.classList.remove('hidden');
-              this.hand.classList.add('waiting');
-            }.bind(this), 1000);
-          },
-          win: function () {
-            var onTransitionend = function (e) {
-              if (e.target === this.winScreen) {
-                window.Ad.create();
-                this.winScreen.removeEventListener('transitionend', onTransitionend);
-              }
-            }.bind(this);
-
-            this.winScreen.addEventListener('transitionend', onTransitionend);
-            this.winScreen.classList.add('show');
-          },
-          resetHandAnglePosition: function () {
-            // this.hand.classList.add('hidden');
-            this.hand.classList.add('original');
-            this.hand.classList.remove('inverted');
-            this.hand.classList.remove('original-empty');
-            this.hand.classList.remove('inverted-empty');
-            this.hand.style.left = '';
-            this.hand.style.top = '';
-          },
-          updateCardCoords: function (x1, y1, x2, y2, hyperA, hyperB, releasedSide) {
-            var nextX;
-            // TODO: Straight line
-            // var nextY = y2 + this.cardSpeed;
-            // var nextX = x1 + (nextY - y1) * ((x2 - x1) / (y2 - y1));
-            // TODO: Parabola
-            // var nextY = y2 + this.cardSpeed;
-            // var nextX = Math.pow(nextY, 2) / (2 * parabolaParam) + this.startHereX;
-            // TODO: :Log(x)
-            // var nextY = y2 + this.cardSpeed;
-            // var logX = Math.pow(nextY, 2)/ 50000;
-            // var nextX = -Math.pow(2, logX) + this.startHereX;
-            // TODO: Hyperbola
-            // var nextY = y2 + this.cardSpeed;
-            // var nextX = Math.sqrt( Math.pow(hyperA, 2) * (Math.pow(nextY, 2) / Math.pow(hyperB, 2) + 1) ) + this.startHereX - hyperA;
-            // TODO: Ellipsis
-            var nextY = y2 + this.cardSpeed;
-            // var nextX = Math.sqrt( Math.pow(hyperA, 2) * (Math.pow(nextY, 2) / Math.pow(hyperB, 2) + 1) ) + this.startHereX - hyperA;
-            // var nextX = Math.sqrt( Math.pow(hyperA, 2) * (1 - Math.pow(nextY, 2) / Math.pow(hyperB, 2)) ) + this.startHereX - hyperA;
-            if (releasedSide === 'left') {
-              nextX = -(Math.sqrt( Math.pow(hyperA, 2) * (1 - Math.pow(nextY, 2) / Math.pow(hyperB, 2)) )) +  hyperA + this.startHereX;
-            } else if (releasedSide === 'right') {
-              nextX = Math.sqrt( Math.pow(hyperA, 2) * (1 - Math.pow(nextY, 2) / Math.pow(hyperB, 2)) ) + this.startHereX - hyperA;
-            }
-            var cardLeft = window.parseInt(nextX);
-            var cardTop = this.screen.clientHeight - window.parseInt(nextY);
-            
-            if (
-              cardLeft > this.screen.clientWidth || cardTop > this.screen.clientHeight ||
-              cardLeft < 0 || cardTop < 0
-            ) {
-              this.removeCard();
-              this.resetHandAnglePosition();
-              return;
-            }
-            
-            // TODO: find better place for this condition
-            if (this.isBasketCollision()) {
-              this.removeCard();
-              this.score();
-              this.basket.classList.add('hit');
-              if (this.scoreVal === 1) {
-                this.win();
-              }
-              this.resetHandAnglePosition();
-              return;
-            }
-            
-            this.card.style.left = cardLeft + 'px';
-            this.card.style.top = cardTop + 'px';
-            
-            window.requestAnimationFrame(this.updateCardCoords.bind(this,
-              x2,
-              y2,
-              nextX,
-              nextY,
-              hyperA,
-              hyperB,
-              releasedSide
-            ));
-          },
-          addCardUI: function () {
-            this.screen.appendChild(this.card);
-          },
-          getCursorPosition: function (releasedX) {
-            return releasedX < this.screen.clientWidth / 2 ? 'left' : 'right';
-          },
-          throwCardUI: function (releasedX, releasedY) {
-            // TODO: Parabola
-            // var parabolaParam;
-            // var param = 200;
-            this.startHereX = releasedX;
-            // if (releasedX < this.screen.clientWidth / 2) {
-            //   parabolaParam = param;
-            // } else {
-            //   parabolaParam = -param;
-            // }
-            // TODO: Log(x)
-            // var parabolaParam = 500;
-            // TODO: Hyperbola, Ellipsis
-            var hyperB = this.screen.clientHeight + this.basket.clientHeight;
-            var hyperA = hyperB / 1.75;
-            var releasedSide = this.getCursorPosition(releasedX);
-            
-            window.requestAnimationFrame(this.updateCardCoords.bind(this,
-              this.cache.x,
-              this.getCorrectCoordinates(this.cache.y),
-              releasedX,
-              this.getCorrectCoordinates(releasedY),
-              // parabolaParam
-              hyperA,
-              hyperB,
-              releasedSide
-            ));
-          },
-          // TODO: Change formula for hand pre-throw 
-          calculateAngle: function (cursorX, cursorY, releasedSide) {
-            // this.hand.classList.remove('waiting');
-            // var tg = this.getCorrectCoordinates(cursorY) / cursorX;
-            // var angleRad = Math.atan(tg);
-            // var angleDeg = angleRad * 180 / Math.PI;
-            // var delta = 30;
-            // angleDeg = releasedSide === 'right' ? angleDeg - delta : -angleDeg + delta;
-            // this.hand.style.transform = 'rotate(' + angleDeg + 'deg)';
-            this.hand.classList.remove('waiting');
-            var maxHeight = this.screen.clientHeight / 2,
-              deg,
-              cursorY = this.screen.clientHeight - cursorY;
-            
-            if (cursorY > maxHeight) {
-              deg = 90;
-            } else {
-              deg = cursorY / maxHeight * 90;
-            }
-            
-            this.hand.style.transform = 'rotate(' + (releasedSide === 'right' ? deg : -deg) + 'deg)';
-          },
-          isSwiped: function (releasedX, releasedY) {
-            return this.cache.x !== releasedX || this.cache.y !== releasedY;
-          },
-          canThrow: function () {
-            return this.cache.x && this.cache.y;
-          },
-          getRandomArbitrary: function (min, max) {
-            return Math.random() * (max - min) + min;
-          },
-          stopPreview: function () {
-            window.clearInterval(this.previewInterval);
-            this.cta.style.display = 'none';
-            this.isPreview = false;
-          },
-          throwCard: function (releasedX, releasedY) {
-            if (!this.card && this.isSwiped(releasedX, releasedY) && this.canThrow()) {
-              this.createCard();
-              this.addCardUI();
-              this.throwCardUI(releasedX - this.hand.clientWidth / 2, releasedY);
-              this.applyHandEmptyClass();
-            }
-          },
-          applyHandEmptyClass: function () {
-            console.log(this.releasedSide);
-            this.hand.classList.toggle('original-empty', this.releasedSide === 'left');
-            this.hand.classList.toggle('inverted-empty', this.releasedSide === 'right');
-          },
-          applyHandPositionClass: function (releasedSide) {
-            this.hand.classList.toggle('original', releasedSide === 'left');
-            this.hand.classList.toggle('inverted', releasedSide === 'right');
-          },
-          moveHand: function (cursorX, cursorY) {
-            // this.hand.style.left = cursorX + this.hand.clientWidth / 2 + 'px';
-            this.hand.style.left = cursorX + 'px';
-            this.hand.style.top = cursorY - this.hand.clientHeight / 2 + 'px';
-          },
-          setReleasedSide: function (releasedSide) {
-            this.releasedSide = releasedSide;
-          },
-          trackHandPosition: function (cursorX, cursorY) {
-            var releasedSide = this.getCursorPosition(cursorX);
-
-            this.calculateAngle(cursorX, cursorY, releasedSide);
-            this.moveHand(cursorX, cursorY);
-            this.setReleasedSide(releasedSide);
-            this.applyHandPositionClass(releasedSide);
-          },
-          preview: function (random) {
-            var handBox;
-            
-            if (!this.card) {
-              handBox = this.hand.getBoundingClientRect();
-              this.cache.x = handBox.left + handBox.width / 2 + random;
-              this.cache.y = handBox.top;
-              this.createCard('placeholder');
-              this.addCardUI();
-              this.throwCardUI(
-                this.cache.x,
-                this.cache.y + 20
-              );
-            }
-          },
-          makePreviewStop: function () {
-            this.shouldStopPreview = true;
-          },
-          startPreview: function () {
-            this.previewInterval = window.setInterval(function () {
-              var random;
-              
-              if (this.shouldStopPreview) {
-                this.stopPreview();
-                return;
-              }
-              
-              if (document.hasFocus()) {
-                random = this.getRandomArbitrary(-20, 20);
-                this.preview(random);
-              } else {
-                if (this.card) {
-                  this.card.remove();
-                  this.card = null;
-                }
-              }
-            }.bind(this), 3000);
-          },
-          start: function (screen) {
-            var onTouchstart = function (e) {
-              this.cacheCoords(
-                e.changedTouches && e.changedTouches[0].clientX,
-                e.changedTouches && e.changedTouches[0].clientY
-              );
-            }.bind(this);
-
-            var onTouchend = function (e) {
-             this.throwCard(
-                e.changedTouches && e.changedTouches[0].clientX,
-                e.changedTouches && e.changedTouches[0].clientY
-              );
-            }.bind(this);
-
-            var onTouchmove = function (e) {
-              var x = e.changedTouches && e.changedTouches[0].clientX,
-                y = e.changedTouches && e.changedTouches[0].clientY;
-
-              this.trackHandPosition(x, y);
-            }.bind(this);
-            
-            var onCloseBtn = function () {
-                this.close();
-                eventListeners('remove');
-            }.bind(this);
-            
-            var onScreenTouchstart = function () {
-              this.makePreviewStop();
-            }.bind(this);
-            
-            var eventListeners = function (state) {
-              this.screen[state + 'EventListener']('touchstart', onScreenTouchstart);
-              this.hand[state + 'EventListener']('touchstart', onTouchstart);
-              this.screen[state + 'EventListener']('touchend', onTouchend);
-              this.hand[state + 'EventListener']('touchmove', onTouchmove);
-              this.closeBtn[state + 'EventListener']('click', onCloseBtn);
-            }.bind(this);
-
-            this.setScreen(screen);
-            this.startPreview();
-            eventListeners('add');
-          },
-          close: function () {
-            this.screen.parentElement.removeChild(this.screen);
-          }
-        };
-        
-        var screen = document.querySelector('.screen');
-        
-        game.start(screen);
-    </script>
+    <script src="./dist/bundle.js"></script>
 </body>
 </html>
